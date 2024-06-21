@@ -262,7 +262,12 @@
 4. Obtener detalles de Rutas Asignadas:
 
    ```sql
-   
+   SELECT
+       r.ruta_id AS id_ruta,
+       r.descripcion AS descripcion,
+       r.sucursal_id AS id_sucursal
+   FROM rutas r
+   JOIN conductores_rutas cr ON r.ruta_id = cr.ruta_id;
    ```
 
 5. Generar reporte de Paquetes por Sucursal y Estado:
