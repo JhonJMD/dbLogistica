@@ -1,6 +1,8 @@
+
+
 # Base de datos logistica
 
-![ER](/home/camper/Documentos/DBJJ/ER.png)
+![](/home/camper/Documents/JhonJMD/DB/dbLogistica/ERLogistica.png)
 
 ## Casos de uso:
 
@@ -209,6 +211,81 @@
     JOIN ubicacion_seguimiento u ON s.ubicacion_id = u.ubicacion_idseg
     JOIN ciudades c ON u.ciudad_id = c.ciudad_id
     WHERE s.paquete_id = 1 
-    ORDER BY s.fecha_hora DESC
-    LIMIT 1;
+    ORDER BY s.fecha_hora DESC;
     ```
+
+## Casos Multitabla:
+
+1. Obtener informacion completa de Envios:
+
+   ```sql
+   SELECT 
+       e.envio_id AS id_envio,
+       e.cliente_id AS id_cliente,
+       e.paquete_id AS id_paquete,
+       e.fecha_envio AS fecha,
+       e.hora_envio AS hora,
+       e.destinatario_id AS id_destinatario,
+       e.ruta_id AS id_ruta,
+       e.sucursal_id AS id_sucursal
+   FROM envios e;
+   ```
+
+2. Obtener historial de Envios de un Cliente:
+
+   ```SQL
+   SELECT 
+       c.nombre AS nombre_cliente,
+       e.envio_id AS id_envio,
+       e.paquete_id AS id_paquete,
+       e.fecha_envio AS fecha,
+       e.hora_envio AS hora,
+       e.destinatario_id AS id_destinatario,
+       e.ruta_id AS id_ruta,
+       e.sucursal_id AS id_sucursal
+   FROM clientes c
+   JOIN envios e ON e.cliente_id = c.cliente_id
+   WHERE c.cliente_id = 1;
+   ```
+
+3. Listar Conductores y sus Rutas Asignadas:
+
+   ```sql
+   SELECT 
+       c.nombre AS nombre_conductor,
+       r.descripcion AS ruta
+   FROM conductores c
+   JOIN conductores_rutas cr ON c.conductor_id = cr.conductor_id
+   JOIN rutas r ON cr.ruta_id = r.ruta_id;
+   ```
+
+4. Obtener detalles de Rutas Asignadas:
+
+   ```sql
+   
+   ```
+
+5. Generar reporte de Paquetes por Sucursal y Estado:
+
+   ```SQL
+   
+   ```
+
+6. Obtener informacion completa de un Paquete y su historial de Seguimiento:
+
+   ```
+   
+   ```
+
+## Casos de uso Between, In y Not In:
+
+1. Obtener Paquetes enviados dentro de un rango de fechas:
+2. Obtener Paquetes con Ciertos Estados:
+3. Obtener Paquetes excluyendo ciertos Estados:
+4. Obtener Clientes con Envios realizados dentro de un rango de Fechas:
+5. Obtener Conductores disponibles que no estan asignados a ciertas rutas:
+6. Obtener Información de paquetes con valor declarado dentro de un Rango específico:
+7. Obtener Auxiliares asignados a Rutas específicas:
+8. Obtener envíos a destinos excluyendo ciertas Ciudades:
+9. Obtener Seguimientos de Paquetes en un Rango de fechas:
+10. Obtener Clientes que tienen ciertos tipos de Paquetes:
