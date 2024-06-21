@@ -215,7 +215,8 @@ CREATE TABLE seguimiento(
 	estado_id INT(11),
 	CONSTRAINT pk_id_seguimiento PRIMARY KEY (seguimiento_id),
 	CONSTRAINT fk_idpaquete_seguimiento FOREIGN KEY (paquete_id) REFERENCES paquetes(paquete_id),
-	CONSTRAINT fk_idestado_seguimiento FOREIGN KEY (estado_id) REFERENCES estado_seguimiento(estado_id)
+	CONSTRAINT fk_idestado_seguimiento FOREIGN KEY (estado_id) REFERENCES estado_seguimiento(estado_id),
+	CONSTRAINT fk_idubicacion_seguimiento FOREIGN KEY (ubicacion_id) REFERENCES ubicacion_seguimiento(ubicacion_idseg)
 );
 
 CREATE TABLE conductores_rutas(

@@ -197,4 +197,47 @@ JOIN conductores_rutas cr ON r.ruta_id = cr.ruta_id;
 
 
 SELECT 
-    
+    p.paquete_id AS id_paquete,
+    p.peso AS peso,
+    d.ancho AS ancho,
+    d.largo AS largo,
+    p.contenido AS contenido,
+    p.valor_declarado AS valor,
+    s.nombre AS servicio,
+    ep.nombre AS estado,
+    su.nombre AS sucursal
+FROM sucursales su
+JOIN envios e ON su.sucursal_id = e.sucursal_id
+JOIN paquetes p ON e.paquete_id = p.paquete_id
+JOIN tipo_servicio s ON p.servicio_id = s.servicio_id
+JOIN estado_paquete ep ON p.estado_id = ep.estado_id
+JOIN dimensiones d ON p.dimension_id = d.dimension_id;
+
+
+SELECT
+    p.paquete_id AS id_paquete,
+    p.peso AS peso,
+    d.ancho AS ancho,
+    d.largo AS largo,
+    p.contenido AS contenido,
+    p.valor_declarado AS valor,
+    s.nombre AS servicio,
+    ep.nombre AS estado,
+    se.fecha_hora AS fecha,
+    es.nombre AS estado_seguimiento,
+    us.calle AS ubicacion_calle,
+    us.carrera AS ubicacion_carrera,
+    us.descripcion AS ubicacion_descripcion,
+    c.nombre AS ciudad,
+    pa.nombre AS pais
+FROM paquetes p
+JOIN dimensiones d ON p.dimension_id = d.dimension_id
+JOIN tipo_servicio s ON p.servicio_id = s.servicio_id
+JOIN estado_paquete ep ON p.estado_id = ep.estado_id
+JOIN seguimiento se ON p.paquete_id = se.paquete_id
+JOIN estado_seguimiento es ON se.estado_id = es.estado_id
+JOIN ubicacion_seguimiento us ON se.ubicacion_id = us.ubicacion_idseg
+JOIN ciudades c ON us.ciudad_id = c.ciudad_id
+JOIN paises pa ON c.pais_id = pa.pais_id;
+
+
