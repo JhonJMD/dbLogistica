@@ -324,12 +324,172 @@
 ## Casos de uso Between, In y Not In:
 
 1. Obtener Paquetes enviados dentro de un rango de fechas:
+
+   ```sql
+   SELECT
+       p.paquete_id AS id_paquete,
+       p.peso AS peso,
+       d.ancho AS ancho,
+       d.largo AS largo,
+       p.contenido AS contenido,
+       p.valor_declarado AS valor,
+       s.nombre AS servicio,
+       es.nombre AS estado,
+       e.fecha_envio AS fecha_envio
+   FROM paquetes p
+   JOIN dimensiones d ON d.dimension_id = p.dimension_id
+   JOIN tipo_servicio s ON p.servicio_id = s.servicio_id
+   JOIN estado_paquete es ON p.estado_id = es.estado_id
+   JOIN envios e ON p.paquete_id = e.paquete_id
+   WHERE e.fecha_envio BETWEEN '2024-01-01' AND '2024-06-30';
+   ```
+
 2. Obtener Paquetes con Ciertos Estados:
+
+   ```sql
+   SELECT
+       p.paquete_id AS id_paquete,
+       p.peso AS peso,
+       d.ancho AS ancho,
+       d.largo AS largo,
+       p.contenido AS contenido,
+       p.valor_declarado AS valor,
+       s.nombre AS servicio,
+       es.nombre AS estado
+   FROM paquetes p
+   JOIN dimensiones d ON d.dimension_id = p.dimension_id
+   JOIN tipo_servicio s ON p.servicio_id = s.servicio_id
+   JOIN estado_paquete es ON p.estado_id = es.estado_id
+   WHERE es.nombre IN ('Proceso de Envio');
+   ```
+
 3. Obtener Paquetes excluyendo ciertos Estados:
+
+   ```sql
+   SELECT
+       p.paquete_id AS id_paquete,
+       p.peso AS peso,
+       d.ancho AS ancho,
+       d.largo AS largo,
+       p.contenido AS contenido,
+       p.valor_declarado AS valor,
+       s.nombre AS servicio,
+       es.nombre AS estado
+   FROM paquetes p
+   JOIN dimensiones d ON d.dimension_id = p.dimension_id
+   JOIN tipo_servicio s ON p.servicio_id = s.servicio_id
+   JOIN estado_paquete es ON p.estado_id = es.estado_id
+   WHERE es.nombre NOT IN ('Proceso de Envio','Enviado');
+   ```
+
 4. Obtener Clientes con Envios realizados dentro de un rango de Fechas:
+
+   ```sql
+   SELECT 
+       c.nombre AS nombre_cliente,
+       c.email AS email,
+       dc.calle AS calle,
+       dc.carrera AS carrera,
+       dc.descripcion AS descripcion,
+       cu.nombre AS ciudad,
+       p.nombre AS pais
+   FROM clientes c
+   JOIN direccion_cliente dc ON c.direccion_id = dc.direccion_idcli
+   JOIN ciudades cu ON dc.ciudad_id = cu.ciudad_id
+   JOIN paises p ON cu.pais_id = p.pais_id
+   JOIN envios e ON c.cliente_id = e.cliente_id
+   WHERE e.fecha_envio BETWEEN '2024-01-01' AND '2024-06-30';
+   ```
+
 5. Obtener Conductores disponibles que no estan asignados a ciertas rutas:
+
+   ```sql
+   SELECT
+       c.nombre AS nombre_conductor,
+       t.numero AS telefono
+   FROM conductores c
+   JOIN telefonos_conductores t ON c.conductor_id = t.conductor_id
+   JOIN conductores_rutas cr ON c.conductor_id = cr.conductor_id
+   JOIN rutas r ON cr.ruta_id = r.ruta_id
+   WHERE cr.ruta_id NOT IN (1,2);
+   ```
+
 6. Obtener Información de paquetes con valor declarado dentro de un Rango específico:
+
+   ```sql
+   SELECT 
+       p.paquete_id AS id_paquete,
+       p.peso AS peso,
+       d.ancho AS ancho,
+       d.largo AS largo,
+       p.contenido AS contenido,
+       p.valor_declarado AS valor,
+       s.nombre AS servicio,
+       e.nombre AS estado
+   FROM paquetes p
+   JOIN dimensiones d ON p.dimension_id = d.dimension_id
+   JOIN tipo_servicio s ON s.servicio_id = p.servicio_id
+   JOIN estado_paquete e ON p.estado_id = e.estado_id
+   WHERE p.valor_declarado BETWEEN 20.00 AND 150.00;
+   ```
+
 7. Obtener Auxiliares asignados a Rutas específicas:
+
+   ```sql
+   SELECT 
+       a.nombre AS nombre_auxiliar,
+       r.descripcion AS ruta
+   FROM auxiliares a
+   JOIN ruta_axiliares ra ON a.auxiliar_id = ra.auxiliar_id
+   JOIN rutas r ON ra.ruta_id = r.ruta_id
+   WHERE r.ruta_id = 1;
+   ```
+
 8. Obtener envíos a destinos excluyendo ciertas Ciudades:
+
+   ```sql
+   SELECT
+       e.envio_id AS id_envio,
+       e.cliente_id AS id_cliente,
+       e.paquete_id AS id_paquete,
+       e.fecha_envio AS fecha,
+       e.hora_envio AS hora,
+       dd.nombre AS nombre_destinatario,
+       c.nombre AS ciudad_destino
+   FROM envios e
+   JOIN destinatarios dd ON e.destinatario_id = dd.destinatario_id
+   JOIN direccion_destinatario d ON dd.direccion_id = d.direccion_iddes
+   JOIN ciudades c ON d.ciudad_id = c.ciudad_id
+   WHERE c.ciudad_id NOT IN ('CI002','CI003');
+   ```
+
 9. Obtener Seguimientos de Paquetes en un Rango de fechas:
+
+   ```sql
+   SELECT 
+       s.seguimiento_id AS id_seguimiento, 
+       s.paquete_id AS id_paquete, 
+       us.calle AS calle,
+       us.carrera AS carrera,
+       us.descripcion AS descripcion, 
+       s.fecha_hora AS fecha_hora, 
+       s.estado_id AS id_estado
+   FROM seguimiento s
+   JOIN ubicacion_seguimiento us ON s.ubicacion_id = us.ubicacion_idseg
+   WHERE s.fecha_hora BETWEEN '2024-01-01 00:00:00' AND '2024-06-30 23:59:59';
+   ```
+
 10. Obtener Clientes que tienen ciertos tipos de Paquetes:
+
+    ```sql
+    SELECT 
+        c.cliente_id AS id_cliente, 
+        c.nombre AS nombre, 
+        c.email AS email
+    FROM clientes c
+    JOIN envios e ON c.cliente_id = e.cliente_id
+    JOIN paquetes p ON e.paquete_id = p.paquete_id
+    WHERE p.servicio_id = 1;  
+    ```
+
+    

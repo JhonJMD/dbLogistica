@@ -226,6 +226,7 @@ CREATE TABLE conductores_rutas(
 	sucursal_id INT(11),
 	CONSTRAINT pk_conductores_rutas PRIMARY KEY (conductor_id, ruta_id),
 	CONSTRAINT fk_idconductor_conrutas FOREIGN KEY (conductor_id) REFERENCES conductores(conductor_id),
+	CONSTRAINT fk_idruta_conrutas FOREIGN KEY (ruta_id) REFERENCES rutas(ruta_id),
 	CONSTRAINT fk_idvehiculo_conrutas FOREIGN KEY (vehiculo_id) REFERENCES vehiculos(vehiculo_id),
 	CONSTRAINT fk_idsucursal FOREIGN KEY (sucursal_id) REFERENCES sucursales(sucursal_id)
 );
