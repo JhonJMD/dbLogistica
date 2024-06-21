@@ -26,14 +26,6 @@ CREATE TABLE conductores(
 	CONSTRAINT pk_id_conductor PRIMARY KEY (conductor_id)
 );
 
-CREATE TABLE direccion_sucursales(
-	direccion_idsur INT AUTO_INCREMENT,
-	calle VARCHAR(20),
-	carrera VARCHAR(20),
-	descripcion VARCHAR(200),
-	CONSTRAINT pk_iddireccion_direcsur PRIMARY KEY (direccion_idsur)
-);
-
 CREATE TABLE marcas(
 	marca_id INT AUTO_INCREMENT,
 	nombre VARCHAR(50),
@@ -59,12 +51,30 @@ CREATE TABLE auxiliares(
 	CONSTRAINT pk_id_auxiliar PRIMARY KEY (auxiliar_id)
 );
 
+CREATE TABLE telefono_auxiliares(
+	telefono_id INT AUTO_INCREMENT,
+	numero VARCHAR(20),
+	auxiliar_id INT(11),
+	CONSTRAINT pk_idtelefono_telauxiliar PRIMARY KEY (telefono_id),
+	CONSTRAINT fk_idauxiliar_telauxiliar FOREIGN KEY (auxiliar_id) REFERENCES auxiliares(auxiliar_id)
+);
+
+CREATE TABLE ciudades( 
+	ciudad_id VARCHAR(10),
+	nombre VARCHAR(100),
+	pais_id VARCHAR(10),
+	CONSTRAINT pk_id_ciudad PRIMARY KEY (ciudad_id),
+	CONSTRAINT fk_idpais_ciudad FOREIGN KEY (pais_id) REFERENCES paises(pais_id)
+);
+
 CREATE TABLE direccion_cliente(
 	direccion_idcli INT AUTO_INCREMENT,
 	calle VARCHAR(20),
 	carrera VARCHAR(20),
 	descripcion VARCHAR(200),
-	CONSTRAINT pk_iddireccion_direccli PRIMARY KEY (direccion_idcli)
+	ciudad_id VARCHAR(10),
+	CONSTRAINT pk_iddireccion_direccli PRIMARY KEY (direccion_idcli),
+	CONSTRAINT fk_idciudad_direccli FOREIGN KEY (ciudad_id) REFERENCES ciudades(ciudad_id)
 );
 
 CREATE TABLE direccion_destinatario(
@@ -72,7 +82,19 @@ CREATE TABLE direccion_destinatario(
 	calle VARCHAR(20),
 	carrera VARCHAR(20),
 	descripcion VARCHAR(200),
-	CONSTRAINT pk_iddireccion_direcdes PRIMARY KEY (direccion_iddes)
+	ciudad_id VARCHAR(10),
+	CONSTRAINT pk_iddireccion_direcdes PRIMARY KEY (direccion_iddes),
+	CONSTRAINT fk_idciudad_direcdes FOREIGN KEY (ciudad_id) REFERENCES ciudades(ciudad_id)
+);
+
+CREATE TABLE direccion_sucursales(
+	direccion_idsur INT AUTO_INCREMENT,
+	calle VARCHAR(20),
+	carrera VARCHAR(20),
+	descripcion VARCHAR(200),
+	ciudad_id VARCHAR(10),
+	CONSTRAINT pk_iddireccion_direcsur PRIMARY KEY (direccion_idsur),
+	CONSTRAINT fk_idciudad_direcsur FOREIGN KEY (ciudad_id) REFERENCES ciudades(ciudad_id)
 );
 
 CREATE TABLE clientes(
@@ -90,22 +112,6 @@ CREATE TABLE telefonos_clientes(
 	cliente_id INT(11),
 	CONSTRAINT pk_idtelefono_telcliente PRIMARY KEY (telefono_id),
 	CONSTRAINT fk_idcliente_telcliente FOREIGN KEY (cliente_id) REFERENCES clientes(cliente_id)
-);
-
-CREATE TABLE telefono_auxiliares(
-	telefono_id INT AUTO_INCREMENT,
-	numero VARCHAR(20),
-	auxiliar_id INT(11),
-	CONSTRAINT pk_idtelefono_telauxiliar PRIMARY KEY (telefono_id),
-	CONSTRAINT fk_idauxiliar_telauxiliar FOREIGN KEY (auxiliar_id) REFERENCES auxiliares(auxiliar_id)
-);
-
-CREATE TABLE ciudades( 
-	ciudad_id VARCHAR(10),
-	nombre VARCHAR(100),
-	pais_id VARCHAR(10),
-	CONSTRAINT pk_id_ciudad PRIMARY KEY (ciudad_id),
-	CONSTRAINT fk_idpais_ciudad FOREIGN KEY (pais_id) REFERENCES paises(pais_id)
 );
 
 CREATE TABLE paquetes(
@@ -126,10 +132,8 @@ CREATE TABLE sucursales(
 	sucursal_id INT AUTO_INCREMENT,
 	nombre VARCHAR(100),
 	direccion_id INT(11),
-	ciudad_id VARCHAR(10),
 	CONSTRAINT pk_id_sucursal PRIMARY KEY (sucursal_id),
-	CONSTRAINT fk_idciudad_sucursal FOREIGN KEY (ciudad_id) REFERENCES ciudades(ciudad_id),
-	CONSTRAINT fk_idireccion_sucursal FOREIGN KEY (direccion_id) REFERENCES direccion_sucursales(direccion_idsur)
+	CONSTRAINT fk_iddireccion_sucursal FOREIGN KEY (direccion_id) REFERENCES direccion_sucursales(direccion_idsur)
 );
 
 CREATE TABLE modelos(
@@ -197,6 +201,7 @@ CREATE TABLE ubicacion_seguimiento(
 	ubicacion_idseg INT AUTO_INCREMENT,
 	calle VARCHAR(20),
 	carrera VARCHAR(20),
+	descripcion VARCHAR(200),
 	ciudad_id VARCHAR(10),
 	CONSTRAINT pk_idubiseg_ubicaseg PRIMARY KEY (ubicacion_idseg),
 	CONSTRAINT fk_idciudad_ubicaseg FOREIGN KEY (ciudad_id) REFERENCES ciudades(ciudad_id)
